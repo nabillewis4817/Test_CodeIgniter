@@ -69,50 +69,106 @@
                 Create Account
             </h2>
 
-            <?php if (isset($validation)): ?>
+            <?php 
+            // Afficher les messages d'erreur
+            if (session()->get('error')): ?>
                 <div class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded">
                     <div class="flex">
                         <div class="flex-shrink-0">
                             <i class="fas fa-exclamation-circle text-red-500"></i>
                         </div>
                         <div class="ml-3">
-                            <?= $validation->listErrors(); ?>
+                            <p class="text-sm"><?= session()->get('error') ?></p>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <?php 
+            // Afficher les erreurs de validation
+            if (session()->get('validation')): 
+                $validation = session()->get('validation');
+            ?>
+                <div class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-exclamation-circle text-red-500"></i>
+                        </div>
+                        <div class="ml-3">
+                            <ul class="list-disc pl-5 space-y-1 text-sm">
+                            <?php foreach ($validation->getErrors() as $error): ?>
+                                <li><?= esc($error) ?></li>
+                            <?php endforeach; ?>
+                            </ul>
                         </div>
                     </div>
                 </div>
             <?php endif; ?>
 
             <form action="<?= site_url('auth/handleRegister') ?>" method="post" class="space-y-6">
+                <?= csrf_field() ?>
+                
                 <div class="space-y-2">
-                    <label class="block text-sm font-medium text-gray-700">Username</label>
+                    <div class="flex justify-between">
+                        <label for="name" class="block text-sm font-medium text-gray-700">Nom complet</label>
+                        <span class="text-xs text-gray-500">3 caractères minimum</span>
+                    </div>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i class="fas fa-user text-gray-400"></i>
                         </div>
-                        <input type="text" name="username" class="input-field pl-10 w-full px-4 py-3 rounded-lg focus:outline-none" 
-                               placeholder="Enter your username" required>
+                        <input type="text" id="name" name="name" 
+                               value="<?= old('name') ?>"
+                               class="input-field pl-10 w-full px-4 py-3 rounded-lg focus:outline-none" 
+                               placeholder="Votre nom complet" 
+                               required
+                               minlength="3"
+                               maxlength="100">
                     </div>
                 </div>
 
                 <div class="space-y-2">
-                    <label class="block text-sm font-medium text-gray-700">Email</label>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Adresse email</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i class="fas fa-envelope text-gray-400"></i>
                         </div>
-                        <input type="email" name="email" class="input-field pl-10 w-full px-4 py-3 rounded-lg focus:outline-none" 
-                               placeholder="Enter your email" required>
+                        <input type="email" id="email" name="email" 
+                               value="<?= old('email') ?>"
+                               class="input-field pl-10 w-full px-4 py-3 rounded-lg focus:outline-none" 
+                               placeholder="votre@email.com" 
+                               required>
                     </div>
                 </div>
 
                 <div class="space-y-2">
-                    <label class="block text-sm font-medium text-gray-700">Password</label>
+                    <div class="flex justify-between">
+                        <label for="password" class="block text-sm font-medium text-gray-700">Mot de passe</label>
+                        <span class="text-xs text-gray-500">6 caractères minimum</span>
+                    </div>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i class="fas fa-lock text-gray-400"></i>
                         </div>
-                        <input type="password" name="password" class="input-field pl-10 w-full px-4 py-3 rounded-lg focus:outline-none" 
-                               placeholder="••••••••" required>
+                        <input type="password" id="password" name="password" 
+                               class="input-field pl-10 w-full px-4 py-3 rounded-lg focus:outline-none" 
+                               placeholder="••••••••" 
+                               required
+                               minlength="6">
+                    </div>
+                </div>
+                
+                <div class="space-y-2">
+                    <label for="password_confirm" class="block text-sm font-medium text-gray-700">Confirmer le mot de passe</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-lock text-gray-400"></i>
+                        </div>
+                        <input type="password" id="password_confirm" name="password_confirm" 
+                               class="input-field pl-10 w-full px-4 py-3 rounded-lg focus:outline-none" 
+                               placeholder="••••••••" 
+                               required
+                               minlength="6">
                     </div>
                 </div>
 
